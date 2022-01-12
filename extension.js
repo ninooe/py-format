@@ -24,32 +24,34 @@ function activate(context) {
 		vscode.window.showInformationMessage('Hello World from py-format!');
 	});
 	let lines2list = vscode.commands.registerCommand('python-formater.lines2list', () => {
-		
 		const editor = vscode.window.activeTextEditor;
-
         if (editor) {
             const document = editor.document;
             editor.edit(editBuilder => {
                 editor.selections.forEach(sel => {
                     const range = sel.isEmpty ? document.getWordRangeAtPosition(sel.start) || sel : sel;
                     let string2edit = document.getText(range);
+					let reg = "\n";
+					// let regoverwrite = string2edit.match('this');
+					let regoverwrite = string2edit.match('^#(.*)# ');
+					if (regoverwrite != null) {
+						reg = regoverwrite[1];
+						string2edit = string2edit.slice(regoverwrite[0].length);
+					}
 					// string to array
-					arrayOfLines = string2edit.match(/[^\r\n]+/g);
-
+					arrayOfLines = string2edit.split(reg);
 					arrayOfLines.forEach((item, index) => {
 						arrayOfLines[index] = '\"'.concat(item, '\"');
-					});
-
+					})
 					string2edit = arrayOfLines.join(',\n');
-
 					// add brackets
-					let retstring = "[\n".concat(string2edit, "\n]")
-
+					let retstring = "[\n".concat(string2edit, "\n]");
 					editBuilder.replace(range, retstring);
                 })
             }) // apply the (accumulated) replacement(s) (if multiple cursors/selections)
 		}
 	});
+	let lines2dict
 	context.subscriptions.push(disposable, lines2list);
 }
 

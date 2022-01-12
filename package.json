@@ -26,7 +26,8 @@
 		},
 		{
 			"command": "python-formater.lines2list",
-			"title": "Lines2List"
+			"title": "lines2list",
+			"when": "editorLangId == python"
 		}]
 	},
 	"scripts": {
