@@ -23,25 +23,29 @@ function activate(context) {
 		// Display a message box to the user
 		vscode.window.showInformationMessage('Hello World from py-format!');
 	});
-	let lines2list = vscode.commands.registerCommand('python-formater.lines2list', () => {
+	let lines2list = vscode.commands.registerCommand('py-format.lines2list', () => {
 		const editor = vscode.window.activeTextEditor;
         if (editor) {
+			let conf = vscode.workspace.getConfiguration('py-format');
             const document = editor.document;
             editor.edit(editBuilder => {
                 editor.selections.forEach(sel => {
                     const range = sel.isEmpty ? document.getWordRangeAtPosition(sel.start) || sel : sel;
                     let string2edit = document.getText(range);
-					let reg = "\n";
-					// let regoverwrite = string2edit.match('this');
-					let regoverwrite = string2edit.match('^#(.*)# ');
+					let reg = conf.get('listSeperator');
+					let regoverwrite = string2edit.match(conf.get('listRegex'));
 					if (regoverwrite != null) {
 						reg = regoverwrite[1];
 						string2edit = string2edit.slice(regoverwrite[0].length);
 					}
 					// string to array
 					arrayOfLines = string2edit.split(reg);
+					let regexList = [/True/, /False/];
 					arrayOfLines.forEach((item, index) => {
-						arrayOfLines[index] = '\"'.concat(item, '\"');
+						var isMatch = regexList.some(rx => rx.test(item));
+						if (!isMatch) {
+							arrayOfLines[index] = '\"'.concat(item, '\"');
+						  } 
 					})
 					string2edit = arrayOfLines.join(',\n');
 					// add brackets
@@ -51,8 +55,40 @@ function activate(context) {
             }) // apply the (accumulated) replacement(s) (if multiple cursors/selections)
 		}
 	});
-	let lines2dict
-	context.subscriptions.push(disposable, lines2list);
+	// let lines2dict = vscode.commands.registerCommand('py-format.lines2dict', () => {
+	// 	const editor = vscode.window.activeTextEditor;
+    //     if (editor) {
+	// 		let conf = vscode.workspace.getConfiguration('py-format');
+    //         const document = editor.document;
+    //         editor.edit(editBuilder => {
+    //             editor.selections.forEach(sel => {
+    //                 const range = sel.isEmpty ? document.getWordRangeAtPosition(sel.start) || sel : sel;
+	// 				let string2edit = document.getText(range);
+	// 				let regSep = conf.get('dictSeperator');
+	// 				let regoverwrite = string2edit.match(conf.get('dictRegex'));
+	// 				if (regoverwrite != null) {
+	// 					regAsg = regoverwrite[1];
+	// 					regSep = regoverwrite[2];
+	// 					string2edit = string2edit.slice(regoverwrite[0].length);
+	// 				}
+					
+	// 				const dictFormat = (string) => {
+
+	// 				}
+
+	// 				this: this
+
+	// 				let retstring = "0";
+
+
+
+	// 				vscode.window.showInformationMessage();
+	// 				editBuilder.replace(range, retstring);
+    //             })
+    //         }) // apply the (accumulated) replacement(s) (if multiple cursors/selections)
+	// 	}
+	// });
+	context.subscriptions.push(disposable, lines2list, lines2dict);
 }
 
 // this method is called when your extension is deactivated

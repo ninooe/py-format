@@ -1,5 +1,5 @@
 {
-  "name": "py-format",
+	"name": "py-format",
 	"displayName": "py-format",
 	"description": "",
 	"version": "0.0.1",
@@ -15,18 +15,53 @@
 	],
 	"activationEvents": [
         "onCommand:py-format.helloWorld",
-        "onCommand:python-formater.lines2list"
+        "onCommand:py-format.lines2list",
+        "onCommand:py-format.lines2dict"
 	],
 	"main": "./extension.js",
 	"contributes": {
+		"configuration": {
+			"title": "PyFormat",
+			"properties": {
+			  	"py-format.listRegex": {
+					"type": "string",
+					"default": "^#(.*)# ",
+					"description": "regex group 1 will set seperator for lists"
+				},
+				"py-format.listSeperator": {
+					"type": "string",
+					"default": "\n",
+					"description": "default seperator (default is \\n)"
+				},
+				"py-format.dictRegex": {
+					"type": "string",
+					"default": "^#(.*)#(.*)# ",
+					"description": "regex group 1 will set seperator group 2 will assign"
+				},
+				"py-format.dictAssign": {
+					"type": "string",
+					"default": "=",
+					"description": "regex group 1 will set seperator for dicts"
+				},
+				"py-format.dictSeperator": {
+					"type": "string",
+					"default": "\n",
+					"description": "default seperator (default is \\n)"
+				}
+			}
+		},
 		"commands": [{
             "command": "py-format.helloWorld",
             "title": "Hello World"
-
 		},
 		{
-			"command": "python-formater.lines2list",
+			"command": "py-format.lines2list",
 			"title": "lines2list",
+			"when": "editorLangId == python"
+		},
+		{
+			"command": "py-format.lines2dict",
+			"title": "lines2dict",
 			"when": "editorLangId == python"
 		}]
 	},
