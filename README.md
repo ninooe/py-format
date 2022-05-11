@@ -3,6 +3,8 @@
 Command to format lines into a python list
 https://marketplace.visualstudio.com/items?itemName=ninooe.py-format
 
+![Example](./format_example.png)
+
 ## Features
 
 ## Requirements
