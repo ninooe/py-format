@@ -1,6 +1,7 @@
 # py-format README
 
-WIP extension to format input into python List
+Command to format lines into a python list
+https://marketplace.visualstudio.com/items?itemName=ninooe.py-format
 
 ## Features
 
